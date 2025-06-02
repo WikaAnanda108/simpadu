@@ -1,6 +1,6 @@
 @extends('template.main')
 
 @section('content')
-    Coba
+DASHBOARD
 @endsection
 
