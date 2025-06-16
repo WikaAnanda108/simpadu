@@ -11,7 +11,20 @@ class Mahasiswa extends Model
 {
     //
     protected $table= 'mahasiswa';
-    
+    protected $primaryKey= 'nim';
+    protected $keyType= 'string';
+
+    protected $fillable = [
+        'nim',
+        'nama',
+        'tanggal_lahir',
+        'telp',
+        'email',
+        'password',
+        'foto',
+        'id_prodi' 
+    ];
+
     public function Prodi(): BelongsTo
     {
         return $this->belongsTo(Prodi::class, 'id_prodi', 'id');
