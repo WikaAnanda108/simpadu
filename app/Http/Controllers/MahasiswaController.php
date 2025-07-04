@@ -16,20 +16,20 @@ class MahasiswaController extends Controller
     public function index()
     {
         //
-       $data = ['nama' => "aca", 'foto' => 'avatar2.png'];
-       $mahasiswa = Mahasiswa::with('prodi')->get();
-       return view('mahasiswa.index', compact('data', 'mahasiswa'));
+        $data = ['nama' => "aca", 'foto' => 'avatar2.png'];
+        $mahasiswa = Mahasiswa::with('Prodi')->get();
+        return view('mahasiswa.index', compact('data', 'mahasiswa'));
     }
 
-       
     /**
      * Show the form for creating a new resource.
      */
     public function create()
     {
-          $data = ['nama'=> "aca", 'foto'=> 'avatar3.png'];
-          $prodi = Prodi::All();
-        return view('mahasiswa.create', compact('data','prodi'));
+        //
+        $data = ['nama' => "aca", 'foto' => 'avatar2.png'];
+        $prodi = Prodi::All();
+        return view('mahasiswa.create', compact('data', 'prodi'));
     }
 
     /**
@@ -37,29 +37,37 @@ class MahasiswaController extends Controller
      */
     public function store(Request $request)
     {
-        $validateData = $request->validate(
+        $validateData =  $request->validate(
             [
-            'nim' => 'required|unique:mahasiswa|max;10',
-            'password' => 'required',
-            'nama' => 'required|max:100',
-            'tanggal_lahir'=> 'required',
-            'telp' => 'required|max:20',
-            'email' => 'required|max:100',
-            'foto' => 'image|file|max:2048'
-        ],
-        [   
-            'nim.required' => 'NIM harus diisi',
-            'nim.unique' => 'NIM sudah terdaftar',
-            'nim.max' =>'NIM maksimal 1o Karakter',
-            'password.required' => 'Password wajib diisi',
-            'nama.required' => 'nama wajib diisi'
-        ]
+                'nim' => 'required|unique:mahasiswa|max:10',
+                'password' => 'required',
+                'nama' => 'required|max:50',
+                'tgl_lahir' => 'required|date',
+                'no_telp' => 'required',
+                'email' => 'required|email',
+                'foto' => 'image|mimes:jpeg,png,jpg,svg'
+            ],
+            [
+                'nim.required' => 'NIM harus diisi',
+                'nim.unique' => 'NIM sudah terdaftar',
+                'nim.max' => 'NIM maksimal 10 karakter',
+                'password.required' => 'Password harus diisi',
+                'nama.required' => 'Nama harus diisi',
+                'nama.max' => 'Nama maksimal 50 karakter',
+                'tgl_lahir.required' => 'Tanggal lahir harus diisi',
+                'no_telp.required' => 'Nomor telepon harus diisi',
+                'email.required' => 'Email harus diisi',
+                'email.email' => 'Format email tidak valid',
+                'foto.image' => 'File harus berupa gambar',
+                'foto.mimes' => 'Format gambar harus jpeg, png, jpg, atau svg'
+            ]
         );
-        if ($request-> file('foto')) {
+
+        if ($request->file('foto')) {
             $validateData['foto'] = $request->file('foto')->store('images');
         }
         $validateData['password'] = Hash::make($validateData['password']);
-        $data = array_merge($validateData, $request->only('id_prodi'));
+        $data=array_merge($validateData,$request->only(['id_prodi']));
         Mahasiswa::create($data);
         return redirect('/mahasiswa');
     }
@@ -78,10 +86,11 @@ class MahasiswaController extends Controller
     public function edit(string $id)
     {
         //
-         $data = ['nama' => "aca", 'foto' => 'avatar2.png'];
-       $mahasiswa = Mahasiswa::find($id);
-       $prodi = Prodi::All();
-       return view('mahasiswa.edit', compact('data', 'mahasiswa','prodi'));
+        $data = ['nama' => "aca", 'foto' => 'avatar2.png'];
+        $mahasiswa = Mahasiswa::find($id);
+        $prodi = Prodi::all();
+        return view('mahasiswa.edit', compact('data','mahasiswa', 'prodi'));
+        
     }
 
     /**
@@ -89,29 +98,36 @@ class MahasiswaController extends Controller
      */
     public function update(Request $request, string $id)
     {
-         $validateData = $request->validate(
+        //
+                $validateData =  $request->validate(
             [
-            'nama' => 'required|max:100',
-            'tanggal_lahir'=> 'required',
-            'telp' => 'required|max:20',
-            'email' => 'required|max:100',
-            'foto' => 'image|file|max:2048'
-        ],
-        [   
-            'nim.required' => 'NIM harus diisi',
-        ]
+                'nama' => 'required|max:50',
+                'tgl_lahir' => 'required|date',
+                'no_telp' => 'required',
+                'email' => 'required|email',
+                'foto' => 'image|mimes:jpeg,png,jpg,svg'
+            ],
+            [
+                'nama.required' => 'Nama harus diisi',
+            ]
         );
-        $mahasiswa = Mahasiswa::find($id);
+
+        $mahasiswa = Mahasiswa::where('nim',$id)->first();
+        if (!$mahasiswa) {
+    abort(404, 'Mahasiswa tidak ditemukan');
+}
         if ($request->file('foto')) {
             if ($mahasiswa->foto) {
-                storage::delete($mahasiswa->foto);
+                Storage::delete($mahasiswa->foto);
             }
-            $validateData['foto']= $request->file('foto')->store('images');
+            $validateData['foto'] = $request->file('foto')->store('images');
         }
+
         if ($request->input(['password'])) {
-            $validateData['password']= Hash::make($request->password);
+            $validateData['password'] = Hash::make($request->password);
         }
-        $data = array_merge($validateData, $request->only(['id_prodi']));
+
+        $data=array_merge($validateData, $request->only(['id_prodi']));
         Mahasiswa::where('nim', $id)->update($data);
         return redirect('/mahasiswa');
     }

@@ -9,7 +9,7 @@ class DashboardController extends Controller
     //
     public function index()
     {
-        $data = ['nama' => "aca", 'foto' => 'avatar3.png'];
+        $data = ['nama' => "aca", 'foto' => 'avatar2.png'];
         return view('dashboard', compact('data'));
     }      
 }

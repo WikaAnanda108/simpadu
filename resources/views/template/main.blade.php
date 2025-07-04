@@ -75,14 +75,10 @@
                 <i class="bi bi-list"></i>
               </a>
             </li>
-
           </ul>
           <!--end::Start Navbar Links-->
           <!--begin::End Navbar Links-->
           <ul class="navbar-nav ms-auto">
-            <!--begin::Navbar Search-->
-
-
             <!--end::Notifications Dropdown Menu-->
             <!--begin::Fullscreen Toggle-->
             <li class="nav-item">
@@ -95,31 +91,27 @@
             <!--begin::User Menu Dropdown-->
             <li class="nav-item dropdown user-menu">
               <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-                <img src="{{  asset('assets/img/' . $data['foto']) }}"
+              <img 
+                 src="{{ asset('assets/img/' . $data['foto']) }}"
                   class="user-image rounded-circle shadow"
-                  alt="User Image"
-                />
+                  alt="User Image" />
               </a>
               <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
                 <!--begin::User Image-->
                 <li class="user-header text-bg-primary">
-                  <img
-                    src="{{  asset('assets/img/' . $data['foto']) }}"
+                 <img 
+                 src="{{ asset('assets/img/' . $data['foto']) }}"
                     class="rounded-circle shadow"
-                    alt="User Image"
-                  />
+                    alt="User Image" />
                   <p>
-                 {{ $data['nama'] }}
+                    {{ $data['nama'] }}
                   </p>
                 </li>
                 <!--end::User Image-->
-                <!--begin::Menu Body-->
-              
-                
                 <!--begin::Menu Footer-->
                 <li class="user-footer">
                   <a href="#" class="btn btn-default btn-flat">Profile</a>
-                  <a href="logout.php" class="btn btn-default btn-flat float-end">Sign out</a>
+                  <a href="logout.php" class="btn btn-default btn-flat float-end">Keluar</a>
                 </li>
                 <!--end::Menu Footer-->
               </ul>
@@ -136,8 +128,8 @@
 
 @yield('content')
 
-      <!--begin::Footer-->
-<footer class="app-footer">
+        <!--begin::Footer-->
+  <footer class="app-footer">
         <!--begin::To the end-->
         <div class="float-end d-none d-sm-inline">Anything you want</div>
         <!--end::To the end-->
@@ -404,6 +396,3 @@
   </body>
   <!--end::Body-->
 </html>
-
-
-
